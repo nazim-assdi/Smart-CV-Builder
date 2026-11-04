@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Smart CV Builder | বাংলা ও English</title>
+<style>
+:root{--accent:#2457c5;--ink:#172033;--muted:#64748b;--line:#e2e8f0;--paper:#fff;--bg:#f1f5f9}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.5 Inter,"Noto Sans Bengali",Arial,sans-serif}
+header{background:#101b32;color:white;padding:14px 22px;display:flex;justify-content:space-between;align-items:center;gap:12px;position:sticky;top:0;z-index:4}
+header strong{font-size:18px}button,select,input,textarea{font:inherit}button{border:0;border-radius:9px;padding:9px 13px;background:var(--accent);color:white;cursor:pointer;font-weight:650}button.secondary{background:#e8eef9;color:#20365f}button.danger{background:#fee2e2;color:#991b1b}
+.actions{display:flex;gap:7px;flex-wrap:wrap}.layout{max-width:1500px;margin:18px auto;padding:0 14px;display:grid;grid-template-columns:minmax(330px,480px) minmax(0,1fr);gap:18px;align-items:start}
+.panel{background:white;border:1px solid var(--line);border-radius:14px;padding:16px;box-shadow:0 4px 16px #0f172a0a}.panel h2{font-size:16px;margin:0 0 12px}.panel h3{font-size:13px;margin:18px 0 8px;color:#334155;border-bottom:1px solid var(--line);padding-bottom:6px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.field{display:flex;flex-direction:column;gap:4px;margin-bottom:9px}.field.full{grid-column:1/-1}label{font-size:12px;color:#475569;font-weight:700}input,textarea,select{border:1px solid #cbd5e1;border-radius:8px;padding:9px;background:white;width:100%;min-width:0;color:#172033}textarea{resize:vertical;min-height:68px}
+.small{font-size:11px;color:var(--muted)}.item{border:1px solid var(--line);border-radius:10px;padding:10px;margin:9px 0;background:#fbfdff}.item-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;font-weight:700;font-size:12px}
+.preview-wrap{position:sticky;top:78px}.preview-top{background:#26354f;color:white;border-radius:12px 12px 0 0;padding:10px 14px;display:flex;justify-content:space-between;align-items:center}.paper-shell{overflow:auto;background:#dce3ec;padding:16px;border-radius:0 0 12px 12px;min-height:500px}
+#cv{width:210mm;min-height:297mm;margin:auto;background:white;box-shadow:0 8px 28px #0f172a22;padding:17mm 16mm;color:#1e293b;overflow-wrap:anywhere}
+.cv-head{display:flex;gap:18px;align-items:center;border-bottom:3px solid var(--accent);padding-bottom:17px;margin-bottom:15px}.cv-photo{width:100px;height:115px;object-fit:cover;border-radius:8px;border:1px solid #dbe2ea}.cv-name{font-size:29px;font-weight:800;line-height:1.15;color:#14213a}.cv-title{font-size:15px;color:var(--accent);font-weight:700;margin:5px 0}.cv-contact{font-size:11px;color:#526176;display:flex;flex-wrap:wrap;gap:5px 12px}
+.cv-section{margin:14px 0;break-inside:avoid}.cv-section h3{font-size:13px;letter-spacing:.7px;color:var(--accent);border-bottom:1px solid #cbd5e1;padding-bottom:4px;margin:0 0 7px}.cv-section p{white-space:pre-line;margin:3px 0;font-size:12px}.cv-row{margin:7px 0;break-inside:avoid}.cv-row strong{font-size:12px}.cv-meta{font-size:11px;color:#64748b}.cv-bullets{margin:4px 0 0;padding-left:18px;font-size:12px}.cv-skills{display:flex;flex-wrap:wrap;gap:6px}.cv-skill{font-size:11px;padding:3px 8px;border-radius:5px;background:#eef2ff;color:#233b79}
+#cv[data-style="sidebar"]{padding:0;display:grid;grid-template-columns:34% 66%}#cv[data-style="sidebar"] .side{background:#182944;color:white;padding:18mm 8mm}#cv[data-style="sidebar"] .main{padding:18mm 12mm}#cv[data-style="sidebar"] .cv-head{display:block;border:0}#cv[data-style="sidebar"] .cv-name{color:white;font-size:23px}#cv[data-style="sidebar"] .cv-title,#cv[data-style="sidebar"] .cv-contact{color:#d8e4ff}#cv[data-style="sidebar"] .cv-section h3{color:var(--accent)}#cv[data-style="sidebar"] .side .cv-section h3{color:#a9c5ff;border-color:#60718d}#cv[data-style="sidebar"] .side .cv-section p,#cv[data-style="sidebar"] .side .cv-meta{color:#e2e8f0}#cv[data-style="sidebar"] .side .cv-skill{background:#314969;color:white}
+#cv[data-style="minimal"] .cv-head{border-bottom:1px solid #94a3b8}#cv[data-style="minimal"] .cv-section h3{color:#334155;border-color:#94a3b8}
+#cv[data-style="classic"] .cv-head{border-bottom:4px double var(--accent);justify-content:center;text-align:center}#cv[data-style="classic"] .cv-contact{justify-content:center}
+#cv[data-style="compact"]{padding:12mm}#cv[data-style="compact"] .cv-section{margin:9px 0}#cv[data-style="compact"] .cv-head{padding-bottom:10px;margin-bottom:10px}
+footer{text-align:center;color:#64748b;padding:20px;font-size:11px}
+@media(max-width:950px){.layout{grid-template-columns:1fr}.preview-wrap{position:static}.paper-shell{padding:8px}#cv{transform-origin:top left}}
+@media print{body{background:white}header,.editor,.preview-top,footer{display:none!important}.layout{display:block;margin:0;padding:0}.preview-wrap{position:static}.paper-shell{padding:0;overflow:visible;background:white}#cv{box-shadow:none;margin:0;width:210mm;min-height:297mm;print-color-adjust:exact;-webkit-print-color-adjust:exact}@page{size:A4;margin:0}}
+</style></head>
+<body>
+<header><strong>📄 Smart CV Builder</strong><div class="actions"><button class="secondary" id="langBtn" type="button">English</button><button id="printTop" type="button">PDF / Print</button></div></header>
+<div class="layout">
+<section class="panel editor">
+<h2 id="formTitle">আপনার CV তৈরি করুন</h2>
+<div class="grid">
+<div class="field"><label id="l-name">পূর্ণ নাম</label><input id="name" placeholder="আপনার নাম"></div>
+<div class="field"><label id="l-title">পদবি / Job Title</label><input id="title" placeholder="যেমন: Accountant"></div>
+<div class="field"><label>Email</label><input id="email" type="email" placeholder="name@email.com"></div>
+<div class="field"><label id="l-phone">মোবাইল</label><input id="phone" placeholder="+880..."></div>
+<div class="field full"><label id="l-address">ঠিকানা</label><input id="address"></div>
+<div class="field full"><label id="l-link">LinkedIn / Portfolio</label><input id="link" placeholder="https://..."></div>
+<div class="field"><label id="l-photo">ছবি</label><input id="photo" type="file" accept="image/*"></div>
+<div class="field"><label id="l-style">CV ডিজাইন</label><select id="style"><option value="modern">Modern</option><option value="sidebar">Two Column</option><option value="minimal">Minimal</option><option value="classic">Classic</option><option value="compact">Compact</option></select></div>
+<div class="field"><label id="l-color">থিম কালার</label><input id="color" type="color" value="#2457c5"></div>
+<div class="field"><label id="l-font">ফন্ট সাইজ</label><select id="font"><option value="12">Compact</option><option value="13" selected>Normal</option><option value="14">Large</option></select></div>
+</div>
+<h3 id="h-summary">Professional Summary / Career Objective</h3><div class="field"><textarea id="summary" placeholder="আপনার সংক্ষিপ্ত পরিচিতি ও লক্ষ্য"></textarea></div>
+<h3 id="h-exp">কর্ম অভিজ্ঞতা</h3><div id="experiences"></div><button class="secondary" id="addExp" type="button">+ অভিজ্ঞতা যোগ</button>
+<h3 id="h-edu">শিক্ষাগত যোগ্যতা</h3><div id="educations"></div><button class="secondary" id="addEdu" type="button">+ শিক্ষা যোগ</button>
+<h3 id="h-skills">দক্ষতা</h3><div class="field"><label id="l-tech">Technical Skills (কমা দিয়ে লিখুন)</label><input id="skills" placeholder="MS Excel, Accounting, Communication"></div>
+<div class="field"><label id="l-soft">Soft Skills</label><input id="soft" placeholder="Teamwork, Problem solving"></div>
+<div class="field"><label id="l-langs">ভাষা</label><input id="langs" placeholder="বাংলা, English"></div>
+<h3 id="h-extra">প্রজেক্ট ও সার্টিফিকেট</h3><div class="field"><label id="l-projects">প্রজেক্ট</label><textarea id="projects"></textarea></div><div class="field"><label id="l-certs">সার্টিফিকেট / প্রশিক্ষণ</label><textarea id="certs"></textarea></div>
+<h3 id="h-refs">রেফারেন্স</h3><div id="references"></div><button class="secondary" id="addRef" type="button">+ রেফারেন্স যোগ</button>
+<hr style="border:0;border-top:1px solid #e2e8f0;margin:16px 0">
+<div class="actions"><button id="sample" type="button">Sample CV</button><button class="secondary" id="export" type="button">JSON Backup</button><button class="secondary" id="import" type="button">Import JSON</button><input id="jsonFile" type="file" accept=".json,application/json" hidden><button class="danger" id="reset" type="button">Reset</button></div>
+<p class="small">আপনার তথ্য এই ব্রাউজারেই থাকে। অনলাইনে কোনো সার্ভারে পাঠানো হয় না। গুরুত্বপূর্ণ তথ্যের JSON Backup রাখুন।</p>
+</section>
+<section class="preview-wrap"><div class="preview-top"><span id="previewLabel">লাইভ CV প্রিভিউ · A4</span><button id="printBottom" type="button">Download PDF</button></div><div class="paper-shell"><article id="cv" data-style="modern"></article></div></section>
+</div><footer>Smart CV Builder · Free · Bilingual · Local-first</footer>
+<script>
+const $=id=>document.getElementById(id);
+let lang='bn',photoData='',exp=[],edu=[],refs=[];
+const fields=['name','title','email','phone','address','link','summary','skills','soft','langs','projects','certs','style','color','font'];
+const safe=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const val=id=>$(id).value.trim();
+function line(label,value){return value?'<p><b>'+safe(label)+':</b> '+safe(value)+'</p>':''}
+function section(title,body){return body?'<section class="cv-section"><h3>'+safe(title)+'</h3>'+body+'</section>':''}
+function row(title,meta,desc){return '<div class="cv-row"><strong>'+safe(title)+'</strong><div class="cv-meta">'+safe(meta)+'</div>'+(desc?'<p>'+safe(desc)+'</p>':'')+'</div>'}
+function listItems(arr,fn){return arr.map(fn).join('')}
+function render(){
+ const c=$('cv');c.dataset.style=val('style');c.style.setProperty('--accent',val('color'));c.style.fontSize=val('font')+'px';
+ const contact=[val('email'),val('phone'),val('address'),val('link')].filter(Boolean).map(safe).join(' &nbsp;•&nbsp; ');
+ const photo=photoData?'<img class="cv-photo" src="'+photoData+'" alt="Profile photo">':'';
+ const name=safe(val('name')|| (lang==='bn'?'আপনার নাম':'Your Name'));
+ const title=safe(val('title')||(lang==='bn'?'পেশাগত পদবি':'Professional Title'));
+ const head='<div class="cv-head">'+photo+'<div><div class="cv-name">'+name+'</div><div class="cv-title">'+title+'</div><div class="cv-contact">'+contact+'</div></div></div>';
+ const expHtml=listItems(exp,x=>row(x.role,x.company+' · '+x.duration,x.details));
+ const eduHtml=listItems(edu,x=>row(x.degree,x.institution+' · '+x.year,x.result));
+ const refsHtml=listItems(refs,x=>row(x.name,x.designation+' · '+x.company,[x.phone,x.email,x.relation].filter(Boolean).join(' · ')));
+ const skillHtml=val('skills')?'<div class="cv-skills">'+val('skills').split(',').map(s=>'<span class="cv-skill">'+safe(s.trim())+'</span>').join('')+'</div>':'';
+ const softHtml=val('soft')?'<p>'+safe(val('soft'))+'</p>':'';
+ const langHtml=val('langs')?'<p>'+safe(val('langs'))+'</p>':'';
+ const main=section(lang==='bn'?'পেশাগত সারসংক্ষেপ':'PROFILE SUMMARY','<p>'+safe(val('summary'))+'</p>')
+ +section(lang==='bn'?'কর্ম অভিজ্ঞতা':'WORK EXPERIENCE',expHtml)
+ +section(lang==='bn'?'শিক্ষাগত যোগ্যতা':'EDUCATION',eduHtml)
+ +section(lang==='bn'?'উল্লেখযোগ্য প্রজেক্ট':'PROJECTS','<p>'+safe(val('projects'))+'</p>')
+ +section(lang==='bn'?'সার্টিফিকেট ও প্রশিক্ষণ':'CERTIFICATIONS','<p>'+safe(val('certs'))+'</p>')
+ +section(lang==='bn'?'রেফারেন্স':'REFERENCES',refsHtml);
+ const side=section(lang==='bn'?'যোগাযোগ':'CONTACT','<p>'+contact+'</p>')
+ +section(lang==='bn'?'কারিগরি দক্ষতা':'SKILLS',skillHtml)
+ +section(lang==='bn'?'সফট স্কিল':'SOFT SKILLS',softHtml)
+ +section(lang==='bn'?'ভাষা':'LANGUAGES',langHtml);
+ if(val('style')==='sidebar')c.innerHTML='<div class="side">'+photo+'<div class="cv-name">'+name+'</div><div class="cv-title">'+title+'</div>'+side+'</div><div class="main">'+main+'</div>';
+ else c.innerHTML=head+main+section(lang==='bn'?'দক্ষতা':'SKILLS',skillHtml+softHtml+langHtml);
+}
+function addCard(kind,data={}){
+ const box=$(kind==='exp'?'experiences':kind==='edu'?'educations':'references'),idx=kind==='exp'?exp.length:kind==='edu'?edu.length:refs.length;
+ const specs=kind==='exp'?[['role','পদবি'],['company','প্রতিষ্ঠান'],['duration','সময়কাল'],['details','দায়িত্ব / বিবরণ','textarea']]:kind==='edu'?[['degree','ডিগ্রি / পরীক্ষার নাম'],['institution','প্রতিষ্ঠান'],['year','সাল'],['result','ফলাফল']]:[['name','নাম'],['designation','পদবি'],['company','প্রতিষ্ঠান'],['phone','ফোন'],['email','ইমেইল'],['relation','সম্পর্ক']];
+ const div=document.createElement('div');div.className='item';div.dataset.kind=kind;
+ div.innerHTML='<div class="item-head"><span>'+(kind==='exp'?'Experience':kind==='edu'?'Education':'Reference')+' '+(idx+1)+'</span><button type="button" class="danger remove">Remove</button></div><div class="grid">'+specs.map(([key,label,type])=>'<div class="field '+(type==='textarea'?'full':'')+'"><label>'+label+'</label>'+(type==='textarea'?'<textarea data-key="'+key+'"></textarea>':'<input data-key="'+key+'">')+'</div>').join('')+'</div>';
+ div.querySelectorAll('[data-key]').forEach(el=>el.value=data[el.dataset.key]||'');
+ div.querySelector('.remove').onclick=()=>{div.remove();collectCards();render()};
+ box.append(div);collectCards();
+}
+function collectCards(){for(const [kind,id,target] of [['exp','experiences',exp],['edu','educations',edu],['ref','references',refs]]){target.length=0;$(id).querySelectorAll('.item').forEach(card=>{const obj={};card.querySelectorAll('[data-key]').forEach(el=>obj[el.dataset.key]=el.value);target.push(obj)})}}
+function bind(){fields.forEach(id=>$(id).addEventListener('input',render));['experiences','educations','references'].forEach(id=>$(id).addEventListener('input',()=>{collectCards();render()}))}
+$('addExp').onclick=()=>{addCard('exp');render()};$('addEdu').onclick=()=>{addCard('edu');render()};$('addRef').onclick=()=>{addCard('ref');render()};
+$('photo').onchange=e=>{const f=e.target.files[0];if(!f)return;if(!f.type.startsWith('image/'))return alert('Please select an image.');if(f.size>4*1024*1024)return alert('ছবির সাইজ ৪ MB-এর কম রাখুন।');const reader=new FileReader();reader.onload=()=>{photoData=reader.result;render()};reader.readAsDataURL(f)};
+function snapshot(){collectCards();const d={version:1,lang,photoData,exp,edu,refs,values:{}};fields.forEach(id=>d.values[id]=$(id).value);return d}
+function load(d){if(!d||typeof d!=='object'||!d.values)throw Error('Invalid CV backup');fields.forEach(id=>$(id).value=typeof d.values[id]==='string'?d.values[id]:'');lang=d.lang==='en'?'en':'bn';photoData=typeof d.photoData==='string'&&d.photoData.startsWith('data:image/')?d.photoData:'';exp=Array.isArray(d.exp)?d.exp:[];edu=Array.isArray(d.edu)?d.edu:[];refs=Array.isArray(d.refs)?d.refs:[];['experiences','educations','references'].forEach(id=>$(id).innerHTML='');exp.forEach(x=>addCard('exp',x));edu.forEach(x=>addCard('edu',x));refs.forEach(x=>addCard('ref',x));render();translate()}
+$('export').onclick=()=>{const blob=new Blob([JSON.stringify(snapshot(),null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='my-cv-backup.json';a.click();URL.revokeObjectURL(a.href)};
+$('import').onclick=()=>$('jsonFile').click();$('jsonFile').onchange=async e=>{try{load(JSON.parse(await e.target.files[0].text()))}catch(err){alert('JSON ফাইলটি সঠিক নয়।')}e.target.value=''};
+$('printTop').onclick=$('printBottom').onclick=()=>window.print();
+$('reset').onclick=()=>{if(!confirm('সব তথ্য মুছে ফেলবেন?'))return;fields.forEach(id=>$(id).value=id==='style'?'modern':id==='color'?'#2457c5':id==='font'?'13':'');photoData='';exp=[];edu=[];refs=[];['experiences','educations','references'].forEach(id=>$(id).innerHTML='');$('photo').value='';render()};
+$('sample').onclick=()=>{const d={version:1,lang,photoData:'',exp:[{role:'Accounts Executive',company:'ABC Company, Dhaka',duration:'2023 – Present',details:'Maintained daily accounts, prepared vouchers and reconciled bank statements.'}],edu:[{degree:'Master of Business Studies',institution:'National University',year:'2023',result:'CGPA 3.80'}],refs:[],values:{name:'Your Name',title:'Accountant | Finance Operations',email:'you@example.com',phone:'+880 1XXXXXXXXX',address:'Dhaka, Bangladesh',link:'',summary:'Detail-oriented professional with experience in accounting, financial records and office operations.',skills:'MS Excel, Bookkeeping, Bank Reconciliation, QuickBooks',soft:'Communication, Teamwork, Problem Solving',langs:'Bangla (Native), English (Working)',projects:'',certs:'',style:'modern',color:'#2457c5',font:'13'}};load(d)};
+const translations={bn:{formTitle:'আপনার CV তৈরি করুন',name:'পূর্ণ নাম',phone:'মোবাইল',address:'ঠিকানা',link:'LinkedIn / Portfolio',photo:'ছবি',style:'CV ডিজাইন',color:'থিম কালার',font:'ফন্ট সাইজ',summary:'Professional Summary / Career Objective',exp:'কর্ম অভিজ্ঞতা',edu:'শিক্ষাগত যোগ্যতা',skills:'দক্ষতা',tech:'Technical Skills (কমা দিয়ে লিখুন)',soft:'Soft Skills',langs:'ভাষা',extra:'প্রজেক্ট ও সার্টিফিকেট',projects:'প্রজেক্ট',certs:'সার্টিফিকেট / প্রশিক্ষণ',refs:'রেফারেন্স',preview:'লাইভ CV প্রিভিউ · A4'},en:{formTitle:'Build your professional CV',name:'Full Name',phone:'Phone Number',address:'Address',link:'LinkedIn / Portfolio',photo:'Profile Photo',style:'CV Template',color:'Theme Color',font:'Font Size',summary:'Professional Summary / Career Objective',exp:'Work Experience',edu:'Education',skills:'Skills',tech:'Technical Skills (comma separated)',soft:'Soft Skills',langs:'Languages',extra:'Projects & Certifications',projects:'Projects',certs:'Certificates / Training',refs:'References',preview:'Live CV Preview · A4'}};
+function translate(){const t=translations[lang];$('formTitle').textContent=t.formTitle;Object.keys(t).forEach(k=>{const id=({name:'l-name',phone:'l-phone',address:'l-address',link:'l-link',photo:'l-photo',style:'l-style',color:'l-color',font:'l-font',summary:'h-summary',exp:'h-exp',edu:'h-edu',skills:'h-skills',tech:'l-tech',soft:'l-soft',langs:'l-langs',extra:'h-extra',projects:'l-projects',certs:'l-certs',refs:'h-refs',preview:'previewLabel'})[k];if(id)$(id).textContent=t[k]});$('langBtn').textContent=lang==='bn'?'English':'বাংলা';}
+$('langBtn').onclick=()=>{lang=lang==='bn'?'en':'bn';translate();render()};
+bind();translate();render();
+</script></body></html>
